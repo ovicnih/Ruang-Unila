@@ -1,0 +1,50 @@
+# URL Rewriting for Ruang Unila
+RewriteEngine On
+RewriteBase /WEBUNILA/Ruang-Unila/
+
+# Allow access to existing files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route all other requests to index.php
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# PHP Configuration
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 2M
+    php_value post_max_size 8M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# Allow access to specific file types
+<FilesMatch "\.(php|css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Require all granted
+</FilesMatch>
+
+# Deny access to sensitive files
+<FilesMatch "\.(env|log|sql|bak|config)$">
+    Require all denied
+</FilesMatch>
+
+# Enable CORS for local development
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Disable directory listing
+Options -Indexes
+
+# Custom error pages (optional)
+# ErrorDocument 404 /WEBUNILA/Ruang-Unila/404.php
+# ErrorDocument 403 /WEBUNILA/Ruang-Unila/403.php
+# ErrorDocument 500 /WEBUNILA/Ruang-Unila/500.php

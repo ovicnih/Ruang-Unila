@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Unila - Tailwind Components</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#9E0000',
+                        'primary-light': '#CC0000',
+                        'text-primary': '#191C1D',
+                        'text-secondary': '#5E3F3A',
+                        'text-muted': '#71717A',
+                        border: '#E8BDB6',
+                        'border-light': '#E7E8E9',
+                        background: '#F8F9FA',
+                    },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        heading: ['Newsreader', 'serif'],
+                    },
+                    boxShadow: {
+                        'sm': '0px 1px 2px rgba(0, 0, 0, 0.05)',
+                        'md': '0px 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                        'lg': '0px 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                        'xl': '0px 20px 25px -5px rgba(0, 0, 0, 0.1)',
+                    },
+                    borderRadius: {
+                        'DEFAULT': '8px',
+                        'full': '9999px',
+                    },
+                    maxWidth: {
+                        'content': '1280px',
+                    },
+                    height: {
+                        'navbar': '72px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .backdrop-blur-navbar {
+                backdrop-filter: blur(6px);
+                -webkit-backdrop-filter: blur(6px);
+            }
+        }
+    </style>
+</head>
+<body class="bg-background font-sans text-text-primary antialiased">
+
+    <!-- ============================================================
+         NAVBAR
+         ============================================================ -->
+    <nav class="fixed top-0 left-0 right-0 h-navbar bg-white/80 backdrop-blur-navbar z-50 border-b border-border-light">
+        <div class="max-w-content mx-auto h-full px-6 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#" class="font-heading text-2xl font-bold text-primary tracking-tight">
+                Ruang Unila
+            </a>
+
+            <!-- Navigation Menu -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="#" class="nav-link font-medium text-text-secondary py-1 border-b-2 border-transparent hover:text-primary hover:border-primary text-primary border-primary">
+                    Beranda
+                </a>
+                <a href="#" class="nav-link font-medium text-text-secondary py-1 border-b-2 border-transparent hover:text-primary hover:border-primary">
+                    Berita
+                </a>
+                <a href="#" class="nav-link font-medium text-text-secondary py-1 border-b-2 border-transparent hover:text-primary hover:border-primary">
+                    Event
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative hidden lg:block w-64">
+                <input type="text" placeholder="Cari berita..." 
+                    class="w-full h-9 px-4 pr-10 bg-border-light rounded-full text-sm text-text-muted focus:outline-none focus:ring-2 focus:ring-primary">
+                <svg class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+            </div>
+
+            <!-- Auth Buttons -->
+            <div class="flex items-center gap-4">
+                <a href="#" class="px-4 py-1.5 text-xs font-bold bg-border-light rounded-full hover:bg-border">
+                    Daftar
+                </a>
+                <a href="#" class="px-4 py-1.5 text-xs font-bold bg-gradient-to-br from-primary to-primary-light text-white rounded-full shadow-md hover:-translate-y-0.5 hover:shadow-lg transition-all">
+                    Masuk
+                </a>
+            </div>
+
+            <!-- Hamburger Mobile -->
+            <button class="md:hidden flex flex-col gap-1.5 p-2">
+                <span class="w-6 h-0.5 bg-text-primary"></span>
+                <span class="w-6 h-0.5 bg-text-primary"></span>
+                <span class="w-6 h-0.5 bg-text-primary"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Spacer for fixed navbar -->
+    <div class="h-navbar"></div>
+
+    <div class="max-w-content mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <h2 class="font-heading text-3xl font-bold">Kumpulan Event Mendatang</h2>
+
+                <!-- ============================================================
+                     EVENT CARD
+                     ============================================================ -->
+                <div class="bg-white rounded overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                    <div class="relative">
+                        <img src="https://picsum.photos/id/1/600/400" alt="Event" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 text-center min-w-[60px]">
+                            <div class="text-xs font-bold uppercase text-primary">APR</div>
+                            <div class="text-lg font-extrabold">25</div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-sm leading-relaxed mb-2">Seminar Teknologi Informasi 2026: Masa Depan AI di Indonesia</h3>
+                        <div class="flex items-center gap-1 text-xs text-text-muted mb-4">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span>Gedung Serba Guna Unila</span>
+                        </div>
+                        <button class="w-full py-2 bg-border-light rounded-full text-xs font-bold uppercase tracking-wider hover:bg-border transition-colors">
+                            Daftar Sekarang
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="bg-white rounded overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/2/600/400" alt="Event" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 text-center min-w-[60px]">
+                                <div class="text-xs font-bold uppercase text-primary">MEI</div>
+                                <div class="text-lg font-extrabold">10</div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold text-sm leading-relaxed mb-3">Workshop Desain UI/UX untuk Pemula</h3>
+                            <button class="w-full py-2 bg-border-light rounded-full text-xs font-bold uppercase tracking-wider hover:bg-border transition-colors">
+                                Daftar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded overflow-hidden shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/3/600/400" alt="Event" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-lg p-2 text-center min-w-[60px]">
+                                <div class="text-xs font-bold uppercase text-primary">MEI</div>
+                                <div class="text-lg font-extrabold">17</div>
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <h3 class="font-bold text-sm leading-relaxed mb-3">Lomba Competitive Programming Se-Sumatra</h3>
+                            <button class="w-full py-2 bg-border-light rounded-full text-xs font-bold uppercase tracking-wider hover:bg-border transition-colors">
+                                Daftar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================
+                 SIDEBAR
+                 ============================================================ -->
+            <div class="space-y-6">
+                <div class="bg-white rounded shadow-sm p-6">
+                    <h3 class="font-heading text-xl font-bold mb-4">Kategori</h3>
+                    <nav class="space-y-1">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded bg-primary/10 text-primary font-semibold">
+                            🔥 Populer
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded hover:bg-background text-text-primary transition-colors">
+                            🏫 Kampus
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded hover:bg-background text-text-primary transition-colors">
+                            👥 UKM
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded hover:bg-background text-text-primary transition-colors">
+                            📚 Akademik
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded hover:bg-background text-text-primary transition-colors">
+                            🎉 Event
+                        </a>
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded hover:bg-background text-text-primary transition-colors">
+                            📈 Tren
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="bg-white rounded shadow-sm p-6">
+                    <h3 class="font-heading text-xl font-bold mb-4">Statistik</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted text-sm">Total Berita</span>
+                            <span class="font-bold">128</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted text-sm">Total Event</span>
+                            <span class="font-bold">47</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted text-sm">Pengguna Terdaftar</span>
+                            <span class="font-bold">1.247</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-text-muted text-sm">Event Berlangsung</span>
+                            <span class="font-bold text-primary">12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-border bg-border-light py-12 mt-16">
+        <div class="max-w-content mx-auto px-6 text-center">
+            <div class="font-heading text-2xl font-bold text-primary mb-4">Ruang Unila</div>
+            <p class="text-text-muted text-sm mb-6">Portal Informasi Terpadu Universitas Lampung</p>
+            <div class="flex justify-center gap-8 mb-6">
+                <a href="#" class="text-text-muted text-sm hover:text-primary">Beranda</a>
+                <a href="#" class="text-text-muted text-sm hover:text-primary">Berita</a>
+                <a href="#" class="text-text-muted text-sm hover:text-primary">Event</a>
+                <a href="#" class="text-text-muted text-sm hover:text-primary">Tentang</a>
+            </div>
+            <p class="text-text-muted text-xs">© 2026 Ruang Unila. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+1. Identitas Proyek
+
+Judul Proyek:
+Sistem Informasi Berita Kampus Berbasis Web di Lingkungan Universitas Lampung (Ruang Unila)
+
+Tujuan Utama:
+Mengintegrasikan penyebaran informasi kampus yang sebelumnya tersebar di berbagai media menjadi satu platform terpusat yang valid, terstruktur, dan mudah diakses oleh seluruh civitas akademika.
+
+Model Pengembangan:
+Menggunakan metode Software Development Life Cycle (SDLC) dengan pendekatan Waterfall, yang mencakup tahapan:
+
+Analisis kebutuhan
+Perancangan sistem
+Implementasi
+Pengujian
+Deployment
+Pemeliharaan
+2. Arsitektur Teknis
+2.1 Teknologi yang Digunakan
+Server-side: PHP (pengolahan logika backend dan manajemen data)
+Database: MySQL (penyimpanan data pengguna, berita, dan transaksi)
+Frontend: HTML5 dan CSS3 (pembangunan antarmuka pengguna)
+2.2 Spesifikasi Desain (UI/UX)
+Tipografi:
+Menggunakan font Manrope untuk memastikan keterbacaan yang optimal.
+Palet Warna:
+Surface: #F8F9FA
+On Surface: #5E3F3A
+Teks Primer: #191C1D
+Layout:
+Lebar konten utama: 1280px
+Tinggi navigation bar: 72px
+Elemen visual:
+Border-radius: 8px – 12px
+Shadow untuk memberikan kesan modern dan bersih
+3. Hirarki Informasi (Kategori Konten)
+
+Sistem mengelompokkan informasi ke dalam enam kategori utama:
+
+Populer
+Berita atau kegiatan yang paling banyak dilihat atau sedang tren.
+Kampus
+Informasi umum terkait kebijakan, fasilitas, dan pengumuman resmi universitas.
+UKM
+Informasi kegiatan, prestasi, dan pendaftaran Unit Kegiatan Mahasiswa.
+Akademik
+Jadwal kuliah, seminar, beasiswa, dan pengumuman dari fakultas/prodi.
+Event
+Agenda kegiatan kampus seperti webinar, lomba, dan acara lainnya.
+Tren
+Topik populer di kalangan mahasiswa atau isu terkini di dunia pendidikan.
+4. Fitur Utama dan Fungsionalitas
+4.1 Manajemen Berita
+Admin dan organisasi dapat:
+Menambah
+Mengedit
+Menghapus berita
+Sistem validasi:
+Konten dari organisasi harus disetujui admin sebelum dipublikasikan
+4.2 Sistem Event Terintegrasi
+
+Fitur end-to-end untuk pengelolaan kegiatan:
+
+Publikasi Event:
+Menampilkan detail acara (judul, tanggal, lokasi)
+Pendaftaran:
+Formulir online untuk mahasiswa
+Pembayaran:
+Mendukung event berbayar
+Upload bukti pembayaran atau integrasi transaksi
+Konfirmasi keikutsertaan peserta
+4.3 Manajemen Profil (User Settings)
+Update data diri
+Ubah foto profil
+Ganti password (keamanan akun)
+4.4 Pencarian dan Filter
+Pencarian berbasis kata kunci
+Memudahkan akses ke arsip berita lama
+4.5 Sistem Login Multi-Aktor
+
+Hak akses dibagi menjadi tiga peran:
+
+Admin:
+Kendali penuh sistem (validasi, manajemen data)
+Organisasi:
+Mengajukan berita dan event
+Mahasiswa:
+Mengakses informasi dan mendaftar event
+Kesimpulan Struktur
+
+Dokumen ini sudah:
+
+terstruktur secara hierarkis
+konsisten secara terminologi
+siap digunakan untuk:
+proposal
+laporan skripsi
+dokumentasi proyek
