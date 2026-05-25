@@ -279,9 +279,9 @@ $csrfToken = generateCSRFToken();
             </div>
 
             <!-- News Table -->
-            <div style="background: white; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow: hidden;">
+            <div style="background: white; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow-x: auto;">
                 <!-- Table Header -->
-                <div style="display: grid; grid-template-columns: 1fr 100px 80px 80px 150px; gap: 16px; padding: 16px; background: var(--color-border-light); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--color-text-muted);">
+                <div style="display: grid; grid-template-columns: 1fr 100px 80px 80px 340px; gap: 16px; padding: 16px; background: var(--color-border-light); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--color-text-muted);">
                     <div>Berita</div>
                     <div>Kategori</div>
                     <div>Status</div>
@@ -292,9 +292,9 @@ $csrfToken = generateCSRFToken();
                 <!-- Table Body -->
                 <?php if (count($newsList) > 0): ?>
                     <?php foreach ($newsList as $newsItem): ?>
-                        <div style="display: grid; grid-template-columns: 1fr 100px 80px 80px 150px; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border-light); align-items: center;">
+                        <div style="display: grid; grid-template-columns: 1fr 100px 80px 80px 340px; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border-light); align-items: center;">
                             <!-- News Info -->
-                            <div style="display: flex; gap: 16px; align-items: center;">
+                            <div style="display: flex; gap: 16px; align-items: center; min-width: 0;">
                                 <div style="width: 64px; height: 64px; background: url('<?= $newsItem['image'] ? url('assets/images/uploads/news/' . $newsItem['image']) : url('assets/images/placeholder.jpg') ?>') center/cover; border-radius: 8px; flex-shrink: 0;"></div>
                                 <div style="flex: 1; min-width: 0;">
                                     <a href="<?= url('modules/news/detail.php?id=' . $newsItem['news_id']) ?>" 
@@ -334,11 +334,16 @@ $csrfToken = generateCSRFToken();
                             </div>
                             
                             <!-- Actions -->
-                            <div style="display: flex; gap: 8px;">
+                            <div style="display: flex; gap: 8px; flex-wrap: nowrap;">
                                 <a href="<?= url('modules/news/detail.php?id=' . $newsItem['news_id']) ?>" 
                                    class="btn btn-secondary btn-sm"
-                                   style="padding: 6px 12px;">
+                                   style="padding: 6px 12px; white-space: nowrap;">
                                     Lihat
+                                </a>
+                                <a href="<?= url('modules/news/edit.php?id=' . $newsItem['news_id']) ?>" 
+                                   class="btn btn-secondary btn-sm"
+                                   style="padding: 6px 12px; white-space: nowrap;">
+                                    Edit
                                 </a>
                                 
                                 <?php if ($userRole === ROLE_ADMIN): ?>

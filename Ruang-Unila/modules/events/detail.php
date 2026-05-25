@@ -187,6 +187,22 @@ include APP_ROOT . '/includes/header.php';
                         </div>
                     </div>
                 </div>
+                
+                <?php if ($eventData['fee'] > 0 && !empty($eventData['bank_name'])): ?>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #fefce8; border: 1px solid #fef08a; border-radius: 8px; flex: 1; min-width: 250px;">
+                        <div style="width: 40px; height: 40px; background: #fef08a; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#854d0e" stroke-width="2">
+                                <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                <line x1="2" y1="10" x2="22" y2="10"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-size: 11px; color: #854d0e; font-weight: 700; text-transform: uppercase;">Pembayaran Via <?= htmlspecialchars($eventData['bank_name']) ?></div>
+                            <div style="font-weight: 700; font-size: 14px;"><?= htmlspecialchars($eventData['bank_account_number']) ?></div>
+                            <div style="font-size: 12px; color: #854d0e;">a.n. <?= htmlspecialchars($eventData['bank_account_name']) ?></div>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
             
             <!-- Event Description -->

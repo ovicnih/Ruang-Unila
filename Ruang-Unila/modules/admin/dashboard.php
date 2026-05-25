@@ -380,7 +380,7 @@ include APP_ROOT . '/includes/header.php';
         <!-- Recent Registrations -->
         <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: var(--shadow-sm);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="font-family: var(--font-heading); font-size: 18px; margin: 0;">Registrasi Terbaru</h3>
+                <h3 style="font-family: var(--font-heading); font-size: 18px; margin: 0;">Verifikasi Pembayaran</h3>
                 <a href="<?= url('modules/events/admin_payments.php') ?>" style="font-size: 12px; color: var(--color-primary);">Lihat Semua</a>
             </div>
             <div style="display: flex; flex-direction: column; gap: 16px;">

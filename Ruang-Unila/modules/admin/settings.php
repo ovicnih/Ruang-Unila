@@ -46,7 +46,7 @@ $pageTitle = 'Pengaturan Sistem';
 
 // Backup Database
 if (isset($_GET['backup'])) {
-    $tables = ['users', 'news', 'events', 'event_registrations', 'categories', 'notifications'];
+    $tables = ['users', 'news', 'events', 'event_registrations', 'categories'];
     $backup = "-- RuangUnila Database Backup\n";
     $backup .= "-- Generated: " . date('Y-m-d H:i:s') . "\n\n";
     

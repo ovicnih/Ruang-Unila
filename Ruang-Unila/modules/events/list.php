@@ -85,6 +85,7 @@ foreach ($events as &$eventItem) {
     $eventItem['formatted_date'] = formatDate($eventItem['event_date'], 'd M Y');
     $eventItem['formatted_time'] = date('H:i', strtotime($eventItem['event_date']));
 }
+unset($eventItem);
 
 // Include header
 include APP_ROOT . '/includes/header.php';

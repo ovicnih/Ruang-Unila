@@ -38,7 +38,7 @@ class Database {
      * Password database (kosong untuk XAMPP)
      * @var string
      */
-    private string $password = "";
+    private string $password = "root";
 
     /**
      * Charset database
@@ -186,7 +186,7 @@ class Database {
             return $stmt;
         } catch (PDOException $e) {
             error_log("Query execution error: {$e->getMessage()}");
-            return null;
+            throw $e; // Throw exception to be caught in modules
         }
     }
 

@@ -143,17 +143,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':payment_proof' => $filename
                 ];
                 
-                $stmt = $db->executeQuery($sql, $params);
-                
-                if ($stmt) {
-                    // Hapus session pending
-                    unset($_SESSION['pending_registration']);
+                try {
+                    $stmt = $db->executeQuery($sql, $params);
                     
-                    $success = true;
-                    setFlashMessage('success', 'Pendaftaran dan pembayaran berhasil! Menunggu verifikasi admin.');
-                    redirect('modules/events/detail.php?id=' . $pendingReg['event_id']);
-                } else {
-                    $errors[] = 'Gagal menyimpan data. Silakan coba lagi.';
+                    if ($stmt) {
+                        // Hapus session pending
+                        unset($_SESSION['pending_registration']);
+                        
+                        $success = true;
+                        setFlashMessage('success', 'Pendaftaran dan pembayaran berhasil! Menunggu verifikasi admin.');
+                        redirect('modules/events/detail.php?id=' . $pendingReg['event_id']);
+                    } else {
+                        echo "<h1>Query failed without exception</h1>";
+                        die();
+                    }
+                } catch (Exception $e) {
+                    echo "<h1>Debug Database Error</h1>";
+                    echo "<pre>";
+                    echo "Error Message: " . $e->getMessage() . "\n";
+                    echo "Error Code: " . $e->getCode() . "\n";
+                    echo "\nSQL: $sql\n";
+                    print_r($params);
+                    echo "</pre>";
+                    die();
                 }
             } 
             // Flow lama: data sudah di database - update
@@ -195,7 +207,7 @@ include APP_ROOT . '/includes/header.php';
     <nav style="margin-bottom: 24px; font-size: 14px;">
         <a href="<?= url('modules/events/list.php') ?>" style="color: var(--color-text-muted);">Event</a>
         <span style="margin: 0 8px; color: var(--color-text-muted);">/</span>
-        <a href="<?= url('modules/events/detail.php?id=' . $registration['event_id']) ?>" style="color: var(--color-text-muted);"><?= htmlspecialchars($registration['title']) ?></a>
+        <a href="<?= url('modules/events/detail.php?id=' . $registration['event_id']) ?>" style="color: var(--color-text-muted);"><?= htmlspecialchars($registration['event_title'] ?? $registration['title'] ?? 'Detail Event') ?></a>
         <span style="margin: 0 8px; color: var(--color-text-muted);">/</span>
         <span style="color: var(--color-text-primary);">Pembayaran</span>
     </nav>
@@ -311,7 +323,7 @@ include APP_ROOT . '/includes/header.php';
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                         </svg>
-                        <?= formatDate($registration['event_date'], 'd M Y') ?>
+                        <?= isset($registration['event_date']) ? formatDate($registration['event_date'], 'd M Y') : '-' ?>
                     </div>
                     
                     <div style="display: flex; align-items: center; gap: 8px;">

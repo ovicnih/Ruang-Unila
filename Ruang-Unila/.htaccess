@@ -14,6 +14,7 @@ RewriteRule ^(.*)$ index.php [QSA,L]
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
+    # CSP diatur via PHP header() di config/constants.php
 </IfModule>
 
 # PHP Configuration

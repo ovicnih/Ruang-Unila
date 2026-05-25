@@ -41,7 +41,8 @@ class Event {
     public function getById(int $eventId): ?array {
         $sql = "SELECT e.event_id, e.title, e.description, e.location, 
                        e.event_date, e.registration_deadline, e.max_participants,
-                       e.fee, e.organizer_id, e.image, e.status, e.created_at,
+                       e.fee, e.bank_name, e.bank_account_number, e.bank_account_name,
+                       e.organizer_id, e.image, e.status, e.created_at,
                        u.full_name as organizer_name
                 FROM events e
                 LEFT JOIN users u ON e.organizer_id = u.user_id
@@ -77,7 +78,8 @@ class Event {
         // Ambil data
         $sql = "SELECT e.event_id, e.title, e.description, e.location, 
                        e.event_date, e.registration_deadline, e.max_participants,
-                       e.fee, e.organizer_id, e.image, e.status, e.created_at,
+                       e.fee, e.bank_name, e.bank_account_number, e.bank_account_name,
+                       e.organizer_id, e.image, e.status, e.created_at,
                        u.full_name as organizer_name
                 FROM events e
                 LEFT JOIN users u ON e.organizer_id = u.user_id";
@@ -105,6 +107,52 @@ class Event {
         ];
     }
     
+    public function getByOrganizer(int $organizerId, int $page = 1, int $perPage = 10, ?string $status = null): array {
+        $offset = getPaginationOffset($page, $perPage);
+        
+        // Hitung total
+        $countSql = "SELECT COUNT(*) as total FROM events WHERE organizer_id = :organizer_id";
+        $countParams = [':organizer_id' => $organizerId];
+        
+        if ($status) {
+            $countSql .= " AND status = :status";
+            $countParams[':status'] = $status;
+        }
+        
+        $countResult = $this->db->fetchOne($countSql, $countParams);
+        $total = $countResult ? (int) $countResult['total'] : 0;
+        
+        // Ambil data
+        $sql = "SELECT e.event_id, e.title, e.description, e.location, 
+                       e.event_date, e.registration_deadline, e.max_participants,
+                       e.fee, e.bank_name, e.bank_account_number, e.bank_account_name,
+                       e.organizer_id, e.image, e.status, e.created_at
+                FROM events e
+                WHERE e.organizer_id = :organizer_id";
+        
+        $params = [':organizer_id' => $organizerId];
+        
+        if ($status) {
+            $sql .= " AND e.status = :status";
+            $params[':status'] = $status;
+        }
+        
+        $sql .= " ORDER BY e.created_at DESC LIMIT :limit OFFSET :offset";
+        $params[':limit'] = $perPage;
+        $params[':offset'] = $offset;
+        
+        $stmt = $this->db->executeQuery($sql, $params);
+        $events = $stmt ? $stmt->fetchAll() : [];
+        
+        return [
+            'events' => $events,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_pages' => getTotalPages($total, $perPage)
+        ];
+    }
+    
     /**
      * Insert event baru ke database
      * 
@@ -113,9 +161,13 @@ class Event {
      */
     public function insert(array $data): int|false {
         $sql = "INSERT INTO events (title, description, location, event_date, 
-                registration_deadline, max_participants, fee, organizer_id, image, status) 
+                registration_deadline, max_participants, fee, 
+                bank_name, bank_account_number, bank_account_name,
+                organizer_id, image, status) 
                 VALUES (:title, :description, :location, :event_date, 
-                :registration_deadline, :max_participants, :fee, :organizer_id, :image, :status)";
+                :registration_deadline, :max_participants, :fee, 
+                :bank_name, :bank_account_number, :bank_account_name,
+                :organizer_id, :image, :status)";
         
         $params = [
             ':title' => $data['title'],
@@ -125,6 +177,9 @@ class Event {
             ':registration_deadline' => $data['registration_deadline'],
             ':max_participants' => $data['max_participants'],
             ':fee' => $data['fee'],
+            ':bank_name' => $data['bank_name'] ?? null,
+            ':bank_account_number' => $data['bank_account_number'] ?? null,
+            ':bank_account_name' => $data['bank_account_name'] ?? null,
             ':organizer_id' => $data['organizer_id'],
             ':image' => $data['image'] ?? null,
             ':status' => $data['status'] ?? 'pending'
@@ -277,7 +332,33 @@ class Event {
             'upcoming' => 0,
             'ongoing' => 0,
             'completed' => 0,
-            'cancelled' => 0
+            'cancelled' => 0,
+            'pending' => 0
+        ];
+        
+        foreach ($result as $row) {
+            $counts[$row['status']] = (int) $row['count'];
+        }
+        
+        return $counts;
+    }
+
+    /**
+     * Hitung jumlah event per status berdasarkan penyelenggara
+     * 
+     * @param int $organizerId ID penyelenggara
+     * @return array Jumlah event per status
+     */
+    public function countByStatusByOrganizer(int $organizerId): array {
+        $sql = "SELECT status, COUNT(*) as count FROM events WHERE organizer_id = :organizer_id GROUP BY status";
+        $result = $this->db->fetchAll($sql, [':organizer_id' => $organizerId]);
+        
+        $counts = [
+            'upcoming' => 0,
+            'ongoing' => 0,
+            'completed' => 0,
+            'cancelled' => 0,
+            'pending' => 0
         ];
         
         foreach ($result as $row) {

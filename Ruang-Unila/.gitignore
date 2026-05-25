@@ -1,0 +1,39 @@
+# ============================================================
+# Ruang Unila .gitignore
+# ============================================================
+
+# --- Uploaded user content (sensitive - DO NOT COMMIT) ---
+assets/images/uploads/events/
+assets/images/uploads/news/
+assets/images/uploads/payments/
+assets/images/uploads/profile/
+
+# --- Dead / unused files ---
+assets/css/style.css.bak
+assets/images/icons/
+debug_create_event.log
+
+# --- Dev/scratch scripts ---
+Scratch/
+
+# --- Database migrations (already executed) ---
+database/
+
+# --- Documentation / planning ---
+progress/
+
+# --- OS metadata ---
+Thumbs.db
+.DS_Store
+Desktop.ini
+
+# --- IDE config ---
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# --- Logs ---
+*.log

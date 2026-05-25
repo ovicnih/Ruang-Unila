@@ -635,4 +635,14 @@ function formatDateCustom(string $date, ?string $format = null): string {
     $timestamp = strtotime($date);
     return date($format, $timestamp);
 }
+
+// Auth guard — redirect ke login jika belum login
+if (class_exists('Session') && PHP_SAPI !== 'cli') {
+    $currentPath = $_SERVER['SCRIPT_NAME'] ?? '';
+    $isAuthPage = strpos($currentPath, '/auth/') !== false;
+    $isApiPath = strpos($currentPath, '/api/') !== false;
+    if (!$isAuthPage && !$isApiPath) {
+        requireLogin();
+    }
+}
 ?>

@@ -69,23 +69,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         
         if (count($errors) === 0) {
-            $newStatus = ($action === 'approve') ? 'upcoming' : 'rejected';
-            
-            $sql = "UPDATE events SET status = :status WHERE event_id = :event_id";
-            $stmt = $db->executeQuery($sql, [
-                ':status' => $newStatus,
-                ':event_id' => $actionId
-            ]);
-            
-            if ($stmt) {
-                $success = true;
-                $message = ($action === 'approve') 
-                    ? 'Event berhasil disetujui dan dipublikasikan!' 
-                    : 'Event berhasil ditolak.';
-                setFlashMessage('success', $message);
-                redirect('modules/events/admin.php?status=' . $status);
+            if ($action === 'delete') {
+                $event = new Event();
+                if ($event->delete($actionId)) {
+                    setFlashMessage('success', 'Event berhasil dihapus!');
+                    redirect('modules/events/admin.php?status=' . $status);
+                } else {
+                    $errors[] = 'Gagal menghapus event.';
+                }
             } else {
-                $errors[] = 'Gagal memproses aksi. Silakan coba lagi.';
+                $newStatus = ($action === 'approve') ? 'upcoming' : 'rejected';
+                
+                $sql = "UPDATE events SET status = :status WHERE event_id = :event_id";
+                $stmt = $db->executeQuery($sql, [
+                    ':status' => $newStatus,
+                    ':event_id' => $actionId
+                ]);
+                
+                if ($stmt) {
+                    $message = ($action === 'approve') 
+                        ? 'Event berhasil disetujui dan dipublikasikan!' 
+                        : 'Event berhasil ditolak.';
+                    setFlashMessage('success', $message);
+                    redirect('modules/events/admin.php?status=' . $status);
+                } else {
+                    $errors[] = 'Gagal memproses aksi. Silakan coba lagi.';
+                }
             }
         }
     }
@@ -212,8 +221,8 @@ include APP_ROOT . '/includes/header.php';
                         </div>
                         
                         <!-- Event Info -->
-                        <div>
-                            <h3 style="font-size: 18px; margin-bottom: 8px;">
+                        <div style="min-width: 0;">
+                            <h3 style="font-size: 18px; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <a href="<?= url('modules/events/detail.php?id=' . $eventItem['event_id']) ?>" 
                                    style="color: var(--color-text-primary); text-decoration: none;">
                                     <?= htmlspecialchars($eventItem['title']) ?>
@@ -284,10 +293,26 @@ include APP_ROOT . '/includes/header.php';
                                 </button>
                             <?php endif; ?>
                             
+                            <a href="<?= url('modules/events/edit.php?id=' . $eventItem['event_id']) ?>" 
+                               class="btn btn-primary" style="width: 100%;">
+                                Edit
+                            </a>
                             <a href="<?= url('modules/events/detail.php?id=' . $eventItem['event_id']) ?>" 
                                class="btn btn-outline" style="width: 100%;">
                                 Lihat Detail
                             </a>
+                            <form method="POST" style="margin: 0;" onsubmit="return confirm('Hapus event ini? Tindakan ini tidak dapat dibatalkan.')">
+                                <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
+                                <input type="hidden" name="event_id" value="<?= $eventItem['event_id'] ?>">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" class="btn btn-danger" style="width: 100%;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                    Hapus
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

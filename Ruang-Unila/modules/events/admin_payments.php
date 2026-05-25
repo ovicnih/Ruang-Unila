@@ -1,9 +1,9 @@
 <?php
 /**
- * Modul Verifikasi Pembayaran Admin - Ruang Unila
+ * Modul Verifikasi Pembayaran - Ruang Unila
  * 
- * Dashboard admin untuk verifikasi bukti pembayaran event.
- * Admin bisa setujui atau tolak pembayaran peserta.
+ * Dashboard admin/organisasi untuk verifikasi bukti pembayaran event.
+ * Admin bisa verifikasi semua, Organisasi hanya event miliknya.
  * 
  * @package RuangUnila
  * @subpackage Modules/Events
@@ -30,17 +30,20 @@ require_once APP_ROOT . '/includes/functions.php';
 require_once APP_ROOT . '/classes/User.php';
 require_once APP_ROOT . '/classes/Event.php';
 
-// Require login sebagai admin
+// Inisialisasi
+$session = Session::getInstance();
+$db = Database::getInstance();
+$userRole = $session->getUserRole();
+$userId = $session->getUserId();
+$errors = [];
+
+// Require login (Admin atau Organisasi)
 requireLogin();
 
-if (!hasRole(ROLE_ADMIN)) {
-    setFlashMessage('error', 'Akses ditolak. Hanya admin yang bisa mengakses halaman ini.');
-    redirect('index.php');
+if ($userRole !== ROLE_ADMIN && $userRole !== ROLE_ORGANISATION) {
+    setFlashMessage('error', 'Akses ditolak. Anda tidak memiliki izin untuk verifikasi pembayaran.');
+    redirect(url('index.php'));
 }
-
-// Inisialisasi
-$db = Database::getInstance();
-$errors = [];
 
 // Parameter filter
 $status = isset($_GET['status']) ? sanitize($_GET['status']) : 'pending_verification';
@@ -112,9 +115,18 @@ $queryStatus = $statusMap[$status] ?? 'pending_verification';
 // Hitung total
 $countSql = "SELECT COUNT(*) as total 
              FROM event_registrations er 
+             JOIN events e ON er.event_id = e.event_id
              WHERE er.payment_status = :status 
              AND er.payment_proof IS NOT NULL";
-$countResult = $db->fetchOne($countSql, [':status' => $queryStatus]);
+
+$params = [':status' => $queryStatus];
+
+if ($userRole === ROLE_ORGANISATION) {
+    $countSql .= " AND e.organizer_id = :organizer_id";
+    $params[':organizer_id'] = $userId;
+}
+
+$countResult = $db->fetchOne($countSql, $params);
 $total = $countResult ? (int) $countResult['total'] : 0;
 $totalPages = getTotalPages($total, $perPage);
 $offset = getPaginationOffset($page, $perPage);
@@ -129,15 +141,18 @@ $sql = "SELECT er.registration_id, er.registration_number, er.payment_proof,
         JOIN events e ON er.event_id = e.event_id
         JOIN users u ON er.user_id = u.user_id
         WHERE er.payment_status = :status
-        AND er.payment_proof IS NOT NULL
-        ORDER BY er.created_at DESC
-        LIMIT :limit OFFSET :offset";
+        AND er.payment_proof IS NOT NULL";
 
-$stmt = $db->executeQuery($sql, [
-    ':status' => $queryStatus,
-    ':limit' => $perPage,
-    ':offset' => $offset
-]);
+if ($userRole === ROLE_ORGANISATION) {
+    $sql .= " AND e.organizer_id = :organizer_id";
+}
+
+$sql .= " ORDER BY er.created_at DESC LIMIT :limit OFFSET :offset";
+
+$params[':limit'] = $perPage;
+$params[':offset'] = $offset;
+
+$stmt = $db->executeQuery($sql, $params);
 
 $registrations = $stmt ? $stmt->fetchAll() : [];
 
@@ -149,17 +164,25 @@ $stats = [
     'unpaid' => 0
 ];
 
-$statsSql = "SELECT payment_status, COUNT(*) as count 
-             FROM event_registrations 
-             WHERE payment_proof IS NOT NULL 
-             GROUP BY payment_status";
-$statsResult = $db->fetchAll($statsSql);
+$statsSql = "SELECT er.payment_status, COUNT(*) as count 
+             FROM event_registrations er
+             JOIN events e ON er.event_id = e.event_id
+             WHERE er.payment_proof IS NOT NULL";
+
+$statsParams = [];
+if ($userRole === ROLE_ORGANISATION) {
+    $statsSql .= " AND e.organizer_id = :organizer_id";
+    $statsParams[':organizer_id'] = $userId;
+}
+
+$statsSql .= " GROUP BY er.payment_status";
+$statsResult = $db->fetchAll($statsSql, $statsParams);
 foreach ($statsResult as $row) {
     $stats[$row['payment_status']] = (int) $row['count'];
 }
 
 // Set page title
-$pageTitle = 'Verifikasi Pembayaran - Admin';
+$pageTitle = 'Verifikasi Pembayaran - ' . ucfirst($userRole);
 
 // Include header
 include APP_ROOT . '/includes/header.php';
@@ -244,7 +267,7 @@ include APP_ROOT . '/includes/header.php';
                         </div>
                         
                         <!-- Registration Info -->
-                        <div>
+                        <div style="min-width: 0;">
                             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                                 <span style="background: var(--color-primary-light); color: var(--color-primary); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
                                     <?= htmlspecialchars($reg['registration_number']) ?>
@@ -255,7 +278,7 @@ include APP_ROOT . '/includes/header.php';
                                 </span>
                             </div>
                             
-                            <h3 style="font-size: 18px; margin-bottom: 12px;">
+                            <h3 style="font-size: 18px; margin-bottom: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                                 <a href="<?= url('modules/events/detail.php?id=' . $reg['event_id']) ?>" 
                                    style="color: var(--color-text-primary); text-decoration: none;">
                                     <?= htmlspecialchars($reg['event_title']) ?>

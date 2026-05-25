@@ -151,6 +151,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'notes' => $notes,
                 'fee' => $eventData['fee'],
                 'event_title' => $eventData['title'],
+                'event_date' => $eventData['event_date'],
+                'location' => $eventData['location'],
                 'created_at' => date('Y-m-d H:i:s')
             ];
             

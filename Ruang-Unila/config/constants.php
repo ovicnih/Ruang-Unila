@@ -34,14 +34,19 @@ header("X-Content-Type-Options: nosniff");
 header("X-Frame-Options: SAMEORIGIN");
 header("X-XSS-Protection: 1; mode=block");
 header("Referrer-Policy: strict-origin-when-cross-origin");
-header("Content-Security-Policy: default-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data:; style-src 'self' 'unsafe-inline' fonts.googleapis.com; script-src 'self' 'unsafe-inline';");
+header("Content-Security-Policy: default-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data: https://api.qrserver.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; script-src 'self' 'unsafe-inline';");
 
 
 /** Root path sistem (sudah didefinisikan di index.php) */
 // const APP_ROOT = dirname(__DIR__);
 
-/** Base URL sistem */
-const APP_URL = 'http://localhost/WEBUNILA/Ruang-Unila';
+/** Base URL sistem - dinamis dari APP_ROOT vs DOCUMENT_ROOT */
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$docRoot = str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']);
+$appRoot = str_replace('\\', '/', APP_ROOT);
+$basePath = str_replace($docRoot, '', $appRoot);
+define('APP_URL', $protocol . '://' . $host . $basePath);
 
 // ============================================================
 // KONFIGURASI DATABASE

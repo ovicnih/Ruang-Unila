@@ -327,9 +327,9 @@ include APP_ROOT . '/includes/header.php';
     </div>
 
     <!-- Registrations Table -->
-    <div style="background: white; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow: hidden;">
+    <div style="background: white; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); overflow-x: auto;">
         <!-- Table Header -->
-        <div style="display: grid; grid-template-columns: 150px 1fr 150px 100px 100px 150px; gap: 16px; padding: 16px; background: var(--color-border-light); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--color-text-muted);">
+        <div style="display: grid; grid-template-columns: 150px 1fr 150px 100px 100px 200px; gap: 16px; padding: 16px; background: var(--color-border-light); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--color-text-muted);">
             <div>No. Pendaftaran</div>
             <div>Peserta & Event</div>
             <div>Kontak</div>
@@ -341,7 +341,7 @@ include APP_ROOT . '/includes/header.php';
         <!-- Table Body -->
         <?php if (count($registrations) > 0): ?>
             <?php foreach ($registrations as $reg): ?>
-                <div style="display: grid; grid-template-columns: 150px 1fr 150px 100px 100px 150px; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border-light); align-items: center;">
+                <div style="display: grid; grid-template-columns: 150px 1fr 150px 100px 100px 200px; gap: 16px; padding: 16px; border-bottom: 1px solid var(--color-border-light); align-items: center;">
                     <!-- Registration Number -->
                     <div>
                         <div style="font-weight: 700; font-size: 14px; color: var(--color-text-primary); margin-bottom: 4px;">
@@ -361,11 +361,11 @@ include APP_ROOT . '/includes/header.php';
                     </div>
                     
                     <!-- Participant & Event Info -->
-                    <div>
-                        <div style="font-weight: 700; font-size: 14px; color: var(--color-text-primary); margin-bottom: 4px;">
+                    <div style="min-width: 0;">
+                        <div style="font-weight: 700; font-size: 14px; color: var(--color-text-primary); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <?= htmlspecialchars($reg['user_name']) ?>
                         </div>
-                        <div style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 4px;">
+                        <div style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <?= htmlspecialchars($reg['event_title']) ?>
                         </div>
                         <div style="font-size: 12px; color: var(--color-primary); font-weight: 600;">
